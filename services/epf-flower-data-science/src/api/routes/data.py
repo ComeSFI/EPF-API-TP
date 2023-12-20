@@ -1,7 +1,8 @@
 import kaggle
 from fastapi import APIRouter
-from src.schemas.message import MessageResponse
+# from src.schemas.message import MessageResponse
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
 router = APIRouter()
 
@@ -32,5 +33,10 @@ def preprocess_data():
     return data
 
 @router.get("/split")
-def train_test_split():
-    data  = pd.read_json
+def train_test_split_func():
+    data  = pd.read_json(preprocess_data())
+    train, test = train_test_split(data, test_size=0.2)
+    return train.to_json(orient="records"), test.to_json(orient="records")
+
+
+    
