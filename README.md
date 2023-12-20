@@ -8,7 +8,7 @@
 
   - FastAPI
 
-  - All of the above
+  - **All of the above**
 
 - **Question 2:** _What's the main difference between Django, Flask and FastAPI in terms of performance and speed?_
 
@@ -16,7 +16,7 @@
 
   - Flask outperforms Django and FastAPI.
 
-  - FastAPI is renowned for its increased speed and performance compared with Django and Flask.
+  - **FastAPI is renowned for its increased speed and performance compared with Django and Flask.**
 
   - Django, Flask and FastAPI have equivalent performance.
 
@@ -26,13 +26,13 @@
 
   - A breakpoint in the code where the API can be interrupted.
 
-  - A specific URL to which a request can be sent to interact with the API.
+  - **A specific URL to which a request can be sent to interact with the API.**
 
   - A unique identifier assigned to each incoming request.
 
 - **Question 4:** _What are the main HTTP verbs used to define REST API methods?_
 
-  - GET, POST, PUT, PATCH, DELETE
+  - **GET, POST, PUT, PATCH, DELETE**
 
   - SEND, RECEIVE, UPDATE, REMOVE
 
@@ -46,13 +46,13 @@
 
   - An external library used to speed up API development.
 
-  - Intermediate software that processes the request before it reaches the main application.
+  - **Intermediate software that processes the request before it reaches the main application.**
 
   - A method for securing data stored in the database.
 
 - **Question 6:** _Which Python library is often used to serialize and deserialize JSON data in the context of REST APIs?_
 
-  - JSONify
+  - **JSONify**
 
   - PyJSON
 
@@ -62,7 +62,7 @@
 
 - **Question 7:** _What is the main use of the HTTP "PUT" method in the context of REST APIs?_
 
-  - Create a new resource.
+  - **Create a new resource.**
 
   - Update an existing resource, or create one if it doesn't exist.
 
@@ -72,7 +72,7 @@
 
 - **Question 8:** In FastAPI, how do you define an endpoint to handle a POST request with JSON data?\*
 
-  - @app.post("/endpoint")
+  - **@app.post("/endpoint")**
 
   - @app.get("/endpoint")
 
