@@ -67,8 +67,13 @@ def train_model():
         label_encoder = LabelEncoder()
         labels_encoded = label_encoder.fit_transform(labels)
 
-        # Initialize the SVC classifier
-        model = SVC()
+        # Load the model parameters from the JSON file
+        model_params_file = 'services\epf-flower-data-science\src\config\model_parameters.json'
+        with open(model_params_file, 'r') as file:
+            model_params = json.load(file)
+
+        # Initialize the SVC classifier with loaded parameters
+        model = SVC(**model_params)
 
         # Train the model
         model.fit(features, labels_encoded)
@@ -85,35 +90,20 @@ def train_model():
     
 @router.get("/predict")
 def predict():
+    model_save_path = 'services/epf-flower-data-science/src/models/trained_model.joblib'
     try:
-        train, _ = train_test_split_func()
-        train_data = pd.read_json(train)
-
-        # Extract features and labels
-        features = train_data.drop(columns=["Species"])
-        labels = train_data["Species"]
-
-        # Convert labels to numeric format using LabelEncoder
-        label_encoder = LabelEncoder()
-        labels_encoded = label_encoder.fit_transform(labels)
-
-        # Initialize the SVC classifier
-        model = SVC()
-
-        # Train the model
-        model.fit(features, labels_encoded)
-        if not os.path.exists('services/epf-flower-data-science/src/models'):
-            os.makedirs('services/epf-flower-data-science/src/models')
-        # Save the trained model to the models folder
-        model_filename = 'services/epf-flower-data-science/src/models/trained_model.joblib'
-        joblib.dump(model, model_filename)
-
-        return {"message": "Model trained and saved successfully"}
+        model = joblib.load(model_save_path)
+    except FileNotFoundError:
+        return {"error": "Trained model not found."}
     
-        
+    train, test = train_test_split_func()
+    test_df = pd.read_json(test)
+    
+    X_test = test_df.drop(columns=["Species"])
+    y_pred = pd.DataFrame(model.predict(X_test))
 
-    except Exception as e:
-        return {"error": str(e)}
+    return y_pred.to_json(orient="records")
+    
     
     
     
