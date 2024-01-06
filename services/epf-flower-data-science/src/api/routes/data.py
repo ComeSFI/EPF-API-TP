@@ -17,6 +17,12 @@ router = APIRouter()
 
 @router.get("/download-dataset")
 async def download_dataset():
+    """
+    Downloads the Iris dataset from Kaggle and saves it to the specified directory.
+
+    Returns:
+    dict: {"message": "Dataset downloaded and saved successfully."}
+    """ 
     # The authenticate method no longer requires 'username' and 'key' parameters
     kaggle.api.authenticate()
     
@@ -28,12 +34,24 @@ async def download_dataset():
 
 @router.get("/load-data")
 def load_data():
+    """
+    Loads the Iris dataset from the saved CSV file.
+
+    Returns:
+    str: JSON representation of the loaded dataset.
+    """
     file_path = "services\epf-flower-data-science\src\data\Iris.csv"
     df = pd.read_csv(file_path)
     return df.to_json(orient="records")
 
 @router.get("/preprocess")
 def preprocess_data():
+    """
+    Preprocesses the loaded dataset by replacing specific strings.
+
+    Returns:
+    str: JSON representation of the preprocessed dataset.
+    """
     data = load_data()
     data = data.replace("Iris-", "")
     data = data.replace("Cm","(Cm)")
@@ -41,12 +59,24 @@ def preprocess_data():
 
 @router.get("/split")
 def train_test_split_func():
+    """
+    Splits the preprocessed dataset into training and testing sets.
+
+    Returns:
+    tuple: JSON representation of the training and testing sets.
+    """
     data  = pd.read_json(preprocess_data())
     train, test = train_test_split(data, test_size=0.2)
     return train.to_json(orient="records"), test.to_json(orient="records")
 
 @router.get("/init-params")
 def init_params():
+    """
+    Initializes the model parameters and saves them to a JSON file.
+
+    Returns:
+    dict: {"message": "Model parameters initialized and saved successfully."}
+    """
     model = SVC()
     model_params = model.get_params()
     file_path = 'services\epf-flower-data-science\src\config\model_parameters.json'
@@ -57,6 +87,12 @@ def init_params():
 
 @router.get("/train-model")
 def train_model():
+    """
+    Trains an SVM model using the initialized parameters and saves the model.
+
+    Returns:
+    dict: {"message": "Model trained and saved successfully."}
+    """
     try:
         train, _ = train_test_split_func()
         train_data = pd.read_json(train)
@@ -92,6 +128,12 @@ def train_model():
     
 @router.get("/predict")
 def predict():
+    """
+    Loads the trained SVM model and makes predictions on the test set.
+
+    Returns:
+    str: JSON representation of the predicted labels.
+    """
     model_save_path = 'services/epf-flower-data-science/src/models/trained_model.joblib'
     try:
         model = joblib.load(model_save_path)
@@ -108,6 +150,12 @@ def predict():
     
 @router.get("/get-firestore-data")
 def get_firestore_data():
+    """
+    Retrieves data from a Firestore document.
+
+    Returns:
+    dict or None: Retrieved data from the Firestore document.
+    """
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "services\epf-flower-data-science\src\config\credentials.json"
     # Initialize Firestore
     db = firestore.Client()
@@ -127,6 +175,16 @@ def get_firestore_data():
     
 @router.get("/update-firestore-data")
 def update_firestore_data(parameter_name, parameter_value):
+    """
+    Updates a parameter in a Firestore document.
+
+    Args:
+    parameter_name (str): The name of the parameter to be updated.
+    parameter_value (str): The new value of the parameter.
+
+    Returns:
+    dict: {"message": "Firestore parameter edited with success."}
+    """
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "services\epf-flower-data-science\src\config\credentials.json"
     # Initialize Firestore
     db = firestore.Client()
