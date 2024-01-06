@@ -8,6 +8,8 @@ from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder
 import joblib
 import os
+# from google.cloud import firestore
+import firestore
 
 router = APIRouter()
 
@@ -104,6 +106,42 @@ def predict():
 
     return y_pred.to_json(orient="records")
     
+@router.get("/get-firestore-data")
+def get_firestore_data():
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "services\epf-flower-data-science\src\config\credentials.json"
+    # Initialize Firestore
+    db = firestore.Client()
+
+    # Reference the collection and document
+    collection_ref = db.collection("parameters")
+    document_ref = collection_ref.document("parameters")
+
+    # Get data from the document
+    doc_data = document_ref.get().to_dict()
+
+    # Check if data was retrieved
+    if doc_data:
+        return doc_data
+    else:
+        return None  
     
+@router.get("/update-firestore-data")
+def update_firestore_data(parameter_name, parameter_value):
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "services\epf-flower-data-science\src\config\credentials.json"
+    # Initialize Firestore
+    db = firestore.Client()
+
+    # Reference the collection and document
+    collection_ref = db.collection("parameters")
+    document_ref = collection_ref.document("parameters")
+
+    # Get existing data from the document
+    doc_data = document_ref.get().to_dict() 
+
+    # Add or update the parameter
+    doc_data[parameter_name] = parameter_value
+    document_ref.set(doc_data)
+
+    return {"Firestore parameter edited with success"}
     
     
